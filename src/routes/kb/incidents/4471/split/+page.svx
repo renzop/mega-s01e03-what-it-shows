@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 · two date failures in one ticket'
 owner: Codex
-status: proposed
+status: resolved
 reviewed: 2026-10-30
 signature: Codex
 ---
@@ -17,7 +17,7 @@ signature: Codex
 The desk merged every date report into #4471. The reports describe **two failures**, so the
 ticket's “one issue, one fix” summary cannot cover them both. The table below counts distinct
 report IDs, grouped by the tenant's date locale, booking form, and report channel. It reads the
-current export when the page renders; its counts may change as the desk keeps working.
+current export when the page renders, so a newer export can change the counts.
 
 <CauseTable ticket={4471} />
 
@@ -28,8 +28,9 @@ When both numbers are at most 12, a date can land in another month instead of fa
 This affects app and email reports, and form reports from tenants whose form shows the day-first
 `DD/MM/YYYY` hint. The parser group is the cause that belongs to #4471.
 
-**Action:** Make the parser use the tenant's date order, and test ambiguous dates in the affected
-locales. Check unambiguous dates too, so they fail clearly if their order is wrong.
+**Outcome: fixed.** The desk's 5 October engineering update records
+`fix(dates): parse dd/mm for eu locales`. Verify ambiguous and unambiguous dates in the affected
+locales when checking the fix.
 
 [Track the parser failure](https://github.com/renzop/mega-s01e03-what-it-shows/issues/1).
 
@@ -40,8 +41,9 @@ hint, but the form then reads the entered date in the tenant's day-first order. 
 hint failure, distinct from the shared parser. It occurs on form reports for the affected
 `booking-v3` tenants and needs its own ticket.
 
-**Action:** Show the date format used to interpret the field, and test entry through the form in
-each tenant locale. Correcting the shared parser alone will not make this hint truthful.
+**Outcome: won't fix.** The desk says `booking-v3` was retired. Keep this cause separate in the
+incident record: the parser fix did not make the old form hint truthful. If this form returns,
+make its displayed hint match the date order it accepts and test entry in each tenant locale.
 
 [Track the form hint failure](https://github.com/renzop/mega-s01e03-what-it-shows/issues/2).
 
@@ -51,11 +53,14 @@ line, or the apparent size of a date shift to assign a cause. Use tenant locale,
 and channel. The desk's one-day-move notes remain counted under their assigned cause.
 </Callout>
 
+The desk [closed #4471 on 5 October](https://hq.mega.dev/challenges/what-it-shows) after that
+engineering update. The two linked tickets record different outcomes for the two causes.
+
 ## Queue history
 
 <QueueTimeline ticket={4471} />
 
-The chart shows when the desk received and merged reports. It is a queue history, not proof that
-either fix has shipped. Recheck both groups before closing either ticket.
+The chart shows when the desk received and merged reports. It is a queue history; the engineering
+update above records the outcomes.
 
 <RenderStamp {signature} />
