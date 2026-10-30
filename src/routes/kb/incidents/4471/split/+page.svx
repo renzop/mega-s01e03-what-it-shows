@@ -31,6 +31,8 @@ This affects app and email reports, and form reports from tenants whose form sho
 **Action:** Make the parser use the tenant's date order, and test ambiguous dates in the affected
 locales. Check unambiguous dates too, so they fail clearly if their order is wrong.
 
+[Track the parser failure](https://github.com/renzop/mega-s01e03-what-it-shows/issues/1).
+
 ## 2. Booking form hint contradicts tenant date order
 
 The `booking-v3` form shows `MM/DD/YYYY` to people at day-first tenants. A person can follow that
@@ -40,6 +42,8 @@ hint failure, distinct from the shared parser. It occurs on form reports for the
 
 **Action:** Show the date format used to interpret the field, and test entry through the form in
 each tenant locale. Correcting the shared parser alone will not make this hint truthful.
+
+[Track the form hint failure](https://github.com/renzop/mega-s01e03-what-it-shows/issues/2).
 
 <Callout kind="warn">
 Intake's `meta.intakeTag` comes from the reporter's browser locale. Do not use it, the subject
