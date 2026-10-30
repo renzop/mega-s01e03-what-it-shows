@@ -1,0 +1,57 @@
+---
+layout: runbook
+title: '#4471 · two date failures in one ticket'
+owner: Codex
+status: proposed
+reviewed: 2026-10-30
+signature: Codex
+---
+
+<script>
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+</script>
+
+The desk merged every date report into #4471. The reports describe **two failures**, so the
+ticket's “one issue, one fix” summary cannot cover them both. The table below counts distinct
+report IDs, grouped by the tenant's date locale, booking form, and report channel. It reads the
+current export when the page renders; its counts may change as the desk keeps working.
+
+<CauseTable ticket={4471} />
+
+## 1. Shared parser reads month first
+
+The shared parser treats a date as `MM/DD/YYYY`. These tenants write the day before the month.
+When both numbers are at most 12, a date can land in another month instead of failing visibly.
+This affects app and email reports, and form reports from tenants whose form shows the day-first
+`DD/MM/YYYY` hint. The parser group is the cause that belongs to #4471.
+
+**Action:** Make the parser use the tenant's date order, and test ambiguous dates in the affected
+locales. Check unambiguous dates too, so they fail clearly if their order is wrong.
+
+## 2. Booking form hint contradicts tenant date order
+
+The `booking-v3` form shows `MM/DD/YYYY` to people at day-first tenants. A person can follow that
+hint, but the form then reads the entered date in the tenant's day-first order. This is a form
+hint failure, distinct from the shared parser. It occurs on form reports for the affected
+`booking-v3` tenants and needs its own ticket.
+
+**Action:** Show the date format used to interpret the field, and test entry through the form in
+each tenant locale. Correcting the shared parser alone will not make this hint truthful.
+
+<Callout kind="warn">
+Intake's `meta.intakeTag` comes from the reporter's browser locale. Do not use it, the subject
+line, or the apparent size of a date shift to assign a cause. Use tenant locale, booking form,
+and channel. The desk's one-day-move notes remain counted under their assigned cause.
+</Callout>
+
+## Queue history
+
+<QueueTimeline ticket={4471} />
+
+The chart shows when the desk received and merged reports. It is a queue history, not proof that
+either fix has shipped. Recheck both groups before closing either ticket.
+
+<RenderStamp {signature} />
