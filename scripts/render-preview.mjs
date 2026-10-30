@@ -59,7 +59,9 @@ const fnv1a = (value, seed) => {
   }
   return hash;
 };
-const signature = 'Codex';
+const source = readFileSync(resolve(root, 'src/routes/kb/incidents/4471/split/+page.svx'), 'utf8');
+const signature = source.match(/^signature:\s*(.+)$/m)?.[1]?.trim();
+if (!signature) throw new Error('The split page has no signature');
 let bits = (BigInt(fnv1a(signature, 0x811c9dc5)) << 8n) | BigInt(fnv1a(signature, 0x9e3779b9) & 0xff);
 const alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 let ref = '';

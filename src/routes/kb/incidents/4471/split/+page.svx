@@ -4,7 +4,7 @@ title: '#4471 · two date failures in one ticket'
 owner: Codex
 status: resolved
 reviewed: 2026-10-30
-signature: Codex
+signature: v1.eyJzdWIiOiIzNDE2IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMzNjY3MzMsImV4cCI6MTc5MzQ1MzEzM30.stGHYqDbkAVtZM6rVMA4sqyaxUO8nkjAf7ZNVBg3sIk
 ---
 
 <script>
